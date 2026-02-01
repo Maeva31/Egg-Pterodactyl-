@@ -72,3 +72,9 @@ Le port txAdmin n’est requis que si tu prévois d’activer txAdmin.
 * **[Parkervcp](https://github.com/parkervcp)** – *Script Git Clone & Pull* ([lien](https://github.com/parkervcp/eggs/blob/master/scripts/git_cloner.sh)).
 * **[Pterodactyl](https://pterodactyl.io/)** – *Créateurs et mainteneurs du panel Pterodactyl.*
 * **[Cfx.re](https://fivem.net/)** – *Créateurs et mainteneurs de FiveM et plus encore <3.*
+
+  # Auteur
+- MaEvA  
+  - [page GitHub](https://github.com/Maeva31)
+  - [Discord](https://discord.gg/bJ4UjhjUDP)
+  - [Site Personnel](https://maevakonnect.fr)
