@@ -1,0 +1,45 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v1"
+    },
+    "exported_at": "2020-04-17T02:01:25-04:00",
+    "name": "discord-python-bot",
+    "author": "panel@2b2tmcpe.org",
+    "description": "This is an egg for running discord bot coded using discord.py with a template bot.",
+    "image": "quay.io\/parkervcp\/pterodactyl-images:alpine_python-3",
+    "startup": "python start.py",
+    "config": {
+        "files": "{\r\n    \"config.yml\": {\r\n        \"parser\": \"yaml\",\r\n        \"find\": {\r\n            \"token\": \"{{env.BOT_TOKEN}}\",\r\n            \"prefix\": \"{{env.BOT_PREFIX}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"The bot is ready\",\r\n    \"userInteraction\": []\r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/ash\r\n# Server Files: \/mnt\/server\r\napk add --no-cache git gcc g++ libffi-dev make build-base\r\n# Go to file directory\r\ncd \/mnt\/server\r\n# Cloning bot template\r\ngit clone https:\/\/github.com\/maxxie114\/disord-python-bot-template.git .\r\n# Installing all dependencies to the local directory\r\npip install -U --target $(pwd) -r requirements.txt",
+            "container": "python:3.6-alpine3.7",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "bot token",
+            "description": "Put the token for the discord bot here",
+            "env_variable": "BOT_TOKEN",
+            "default_value": "get_from_discord_developer",
+            "user_viewable": 1,
+            "user_editable": 1,
+            "rules": "required|string|max:64"
+        },
+        {
+            "name": "bot prefix",
+            "description": "Put the prefix of the bot here",
+            "env_variable": "BOT_PREFIX",
+            "default_value": "!",
+            "user_viewable": 1,
+            "user_editable": 1,
+            "rules": "required|string|max:5"
+        }
+    ]
+}
