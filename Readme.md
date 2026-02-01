@@ -117,8 +117,6 @@ Egg Pterodactyl pour **bots Telegram en Python**.
 Ces eggs sont destinés à des utilisateurs ayant déjà des bases en administration serveur et développement (Node.js / Python / FiveM / RedM).  
 Aucune assistance à l’installation n’est garantie.
 
-
-Discord: https://discord.gg/bJ4UjhjUDP
 # Auteur
 - MaEvA  
   - [page GitHub](https://github.com/Maeva31)
