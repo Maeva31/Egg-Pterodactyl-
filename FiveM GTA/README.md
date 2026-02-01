@@ -1,66 +1,74 @@
-## Information
+## Informations
 
-> Why create this, what is it for?
+> Pourquoi créer ceci, à quoi cela sert-il ?
 
-This is simply a fork/edit of [parkervcp](https://github.com/parkervcp)'s FiveM egg found [here](https://github.com/parkervcp/eggs/tree/master/game_eggs/gta/fivem), which I use for my FiveM servers.
+Il s’agit simplement d’un fork / d’une modification de l’egg FiveM de [parkervcp](https://github.com/parkervcp), disponible [ici](https://github.com/parkervcp/eggs/tree/master/game_eggs/gta/fivem), que j’utilise pour mes serveurs FiveM.
 
-> Why should I use this over other FiveM eggs?
+> Pourquoi devrais-je utiliser celui-ci plutôt qu’un autre egg FiveM ?
 
-This fork includes an easy way of updating server artifacts, automatic pulls from private git repositories on server startup into the `resources` folder, and lots of pre-defined convars that can be changed on your servers `Startup` page. I needed this for my servers and figured I'd share it.
+Ce fork inclut un moyen simple de mettre à jour les artifacts du serveur, des récupérations automatiques depuis des dépôts Git privés au démarrage du serveur dans le dossier `resources`, ainsi que de nombreuses convars pré-définies pouvant être modifiées depuis la page `Startup` de votre serveur. J’en avais besoin pour mes serveurs et j’ai donc décidé de le partager.
 
-> I have a question/could you help me set this up?
+> J’ai une question / pourrais-tu m’aider à le configurer ?
 
-Will I help you set this up? No. However if you have any questions I'm usually available in my friends FiveM oriented [discord server](https://discord.gg/cG5uWvUcM6), and would be happy to answer any question you may have.
+Est-ce que je vais t’aider à le configurer ? Non.  
+Cependant, si tu as des questions, je suis généralement disponible sur le [serveur Discord](https://discord.gg/cG5uWvUcM6) orienté FiveM d’un ami, et je serai ravi de répondre à toutes les questions que tu pourrais avoir.
 
-## Updating Server Artifact
+## Mise à jour de l’artifact du serveur
 
-If you want to update your servers artifact I've provided an easy way for doing so. This will completely delete the `alpine` folder and replace it with the specified or latest optional version.
+Si tu souhaites mettre à jour l’artifact de ton serveur, un moyen simple est fourni pour le faire.  
+Cela supprimera complètement le dossier `alpine` et le remplacera par la version spécifiée ou par la dernière version optionnelle.
 
-1. On your servers `Startup` page, set `FiveM Version` to the version you want to update to. Optionally, leave this blank or set it to `latest` to download the latest optional build.
-2. On your servers `Settings` page, click `Reinstall Server` and confirm. Then simply wait for it to download the new artifact.
+1. Sur la page `Startup` de ton serveur, définis `FiveM Version` sur la version vers laquelle tu souhaites mettre à jour.  
+   Tu peux également laisser ce champ vide ou le définir sur `latest` pour télécharger la dernière version optionnelle.
+2. Sur la page `Settings` de ton serveur, clique sur `Reinstall Server` et confirme.  
+   Il ne te reste plus qu’à attendre le téléchargement du nouvel artifact.
 
-## Auto Updating Server from Git
+## Mise à jour automatique du serveur via Git
 
-Listed below is the behavior of Git when it's enabled.
+Le comportement de Git lorsqu’il est activé est décrit ci-dessous.
 
-### Startup Scenarios (On server start)
+### Scénarios au démarrage (au lancement du serveur)
 
-* If the `resources` folder is empty. The specified repository will be cloned into `resources` on startup.
-* If the `resources` folder has a git repository inside it. It will run a git pull in `resources` on startup.
+* Si le dossier `resources` est vide, le dépôt spécifié sera cloné dans `resources` au démarrage.
+* Si le dossier `resources` contient déjà un dépôt Git, un `git pull` sera exécuté dans `resources` au démarrage.
 
-### Reinstall Scenarios (If the `Reinstall Server` button is pressed)
+### Scénarios lors d’une réinstallation  
+*(si le bouton `Reinstall Server` est utilisé)*
 
-* If the `resources` folder does not exist. The folder will be created and the specified repository will be cloned into `resources` on startup.
+* Si le dossier `resources` n’existe pas, le dossier sera créé et le dépôt spécifié sera cloné dans `resources` au démarrage.
 
 ## txAdmin
 
-txAdmin can be enabled by setting `TXADMIN_ENABLED` to `1`. Keep in mind you need to set `TXADMIN_PORT` as well.
+txAdmin peut être activé en définissant `TXADMIN_ENABLED` sur `1`.  
+N’oublie pas qu’il est également nécessaire de définir `TXADMIN_PORT`.
 
-### Your server will not go online until it's started from txadmin.
+### Ton serveur ne passera pas en ligne tant qu’il ne sera pas démarré depuis txAdmin.
 
-While txAdmin is a wonderful piece of software I don't understand the purpose of hosting a server on a panel only to use another panel for managing said server. If you want to use txAdmin I'd recommend staying on [Parkervcp](https://github.com/parkervcp)'s egg since most additional *features*  in this egg are redundant when running txAdmin.
+Bien que txAdmin soit un excellent logiciel, je ne comprends pas l’intérêt d’héberger un serveur sur un panel pour ensuite en utiliser un autre afin de gérer ce même serveur.  
+Si tu souhaites utiliser txAdmin, je recommande de rester sur l’egg de [Parkervcp](https://github.com/parkervcp), car la plupart des fonctionnalités supplémentaires de cet egg deviennent redondantes lorsqu’on utilise txAdmin.
 
-## Notice
+## Remarque
 
-The `FIVEM_VERSION` variable.
+La variable `FIVEM_VERSION`.
 
-* Defaults to `latest` which is the latest optional artifact.
-* Can be set to a specific version Ex. `2431-350dd7bd5c0176216c38625ad5b1108ead44674d`.
-* If the `Reinstall Server` button is pressed the `alpine` folder will be replaced with an updated version.
+* Valeur par défaut : `latest`, correspondant à la dernière version optionnelle.
+* Peut être définie sur une version spécifique, par exemple :  
+  `2431-350dd7bd5c0176216c38625ad5b1108ead44674d`.
+* Si le bouton `Reinstall Server` est utilisé, le dossier `alpine` sera remplacé par une version mise à jour.
 
-## Server Ports
+## Ports du serveur
 
-Ports required to run the server in a table format. You only need the txAdmin port if you plan to enable txAdmin.
+Ports nécessaires au fonctionnement du serveur, présentés sous forme de tableau.  
+Le port txAdmin n’est requis que si tu prévois d’activer txAdmin.
 
-| Port | default |
+| Port | par défaut |
 | - | - |
-| Game | 30120 |
+| Jeu | 30120 |
 | txAdmin | 40120 |
 
-## Credits
+## Crédits
 
-* **[Parkervcp](https://github.com/parkervcp)** - *Original [egg](https://github.com/parkervcp/eggs/tree/master/game_eggs/gta/fivem).*
-* **[Parkervcp](https://github.com/parkervcp)** - *[Git Clone & Pull Script](https://github.com/parkervcp/eggs/blob/master/scripts/git_cloner.sh).*
-* **[Pterodactyl](https://pterodactyl.io/)** - *Creators and maintainers of the Pterodactyl panel.*
-* **[Cfx.re](https://fivem.net/)** - *Creators and maintainers of  FiveM & more <3.*
-
+* **[Parkervcp](https://github.com/parkervcp)** – *Egg FiveM original* ([lien](https://github.com/parkervcp/eggs/tree/master/game_eggs/gta/fivem)).
+* **[Parkervcp](https://github.com/parkervcp)** – *Script Git Clone & Pull* ([lien](https://github.com/parkervcp/eggs/blob/master/scripts/git_cloner.sh)).
+* **[Pterodactyl](https://pterodactyl.io/)** – *Créateurs et mainteneurs du panel Pterodactyl.*
+* **[Cfx.re](https://fivem.net/)** – *Créateurs et mainteneurs de FiveM et plus encore <3.*
