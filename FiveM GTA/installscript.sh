@@ -1,7 +1,7 @@
 #!/bin/ash
-# FiveM Installation Script
+# Script d’installation FiveM
 #
-# Server Files: /mnt/server
+# Fichiers du serveur : /mnt/server
 apt update -y
 apt install -y tar xz-utils curl git file jq unzip
 
@@ -10,33 +10,33 @@ cd /mnt/server
 
 RELEASE_PAGE=$(curl -sSL https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/?$RANDOM)
 
-# Check wether to run installation or update version of script
+# Vérifie s’il faut lancer une installation ou une mise à jour
 if [ ! -d "./alpine/" ] && [ ! -d "./resources/" ]; then
-  # Install script
-  echo "Beginning installation of new FiveM server."
+  # Script d’installation
+  echo "Début de l’installation d’un nouveau serveur FiveM."
 
-  # Grab download link from FIVEM_VERSION
+  # Récupération du lien de téléchargement selon FIVEM_VERSION
   if [ "${FIVEM_VERSION}" == "latest" ] || [ -z ${FIVEM_VERSION} ] ; then
-    # Grab latest optional artifact if version requested is latest or null
+    # Récupère le dernier artifact optionnel si la version est « latest » ou vide
     LATEST_ARTIFACT=$(echo -e "${RELEASE_PAGE}" | grep "LATEST OPTIONAL" -B1 | grep -Eo 'href=".*/*.tar.xz"' | grep -Eo '".*"' | sed 's/\"//g' | sed 's/\.\///1')
     DOWNLOAD_LINK=$(echo https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/${LATEST_ARTIFACT})
   else
-    # Grab specific artifact if it exists
+    # Récupère un artifact spécifique s’il existe
     VERSION_LINK=$(echo -e "${RELEASE_PAGE}" | grep -Eo 'href=".*/*.tar.xz"' | grep -Eo '".*"' | sed 's/\"//g' | sed 's/\.\///1' | grep ${FIVEM_VERSION})
     if [ "${VERSION_LINK}" == "" ]; then
-      echo -e "Defaulting to directly downloading artifact as the version requested was not found on page."
+      echo "Version demandée introuvable, téléchargement direct de l’artifact par défaut."
     else
       DOWNLOAD_LINK=$(echo https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/${FIVEM_VERSION}/fx.tar.xz)
     fi
   fi
 
-  # Download artifact and get filetype
-  echo -e "Running curl -sSL ${DOWNLOAD_LINK} -o ${DOWNLOAD_LINK##*/}..."
+  # Téléchargement de l’artifact et détection du type de fichier
+  echo "Exécution de : curl -sSL ${DOWNLOAD_LINK} -o ${DOWNLOAD_LINK##*/}"
   curl -sSL ${DOWNLOAD_LINK} -o ${DOWNLOAD_LINK##*/}
-  echo "Extracting FiveM artifact files..."
+  echo "Extraction des fichiers de l’artifact FiveM..."
   FILETYPE=$(file -F ',' ${DOWNLOAD_LINK##*/} | cut -d',' -f2 | cut -d' ' -f2)
 
-  # Unpack artifact depending on filetype
+  # Décompression selon le type de fichier
   if [ "$FILETYPE" == "gzip" ]; then
     tar xzvf ${DOWNLOAD_LINK##*/}
   elif [ "$FILETYPE" == "Zip" ]; then
@@ -44,93 +44,89 @@ if [ ! -d "./alpine/" ] && [ ! -d "./resources/" ]; then
   elif [ "$FILETYPE" == "XZ" ]; then
     tar xvf ${DOWNLOAD_LINK##*/}
   else
-    echo -e "Downloaded artifact of unknown filetype. Exiting."
+    echo "Type de fichier inconnu. Arrêt du script."
     exit 2
   fi
 
-  # Delete original bash launch script
+  # Suppression de l’ancien script de lancement
   rm -rf ${DOWNLOAD_LINK##*/} run.sh
 
   if [ -e server.cfg ]; then
-    echo "Server config file already exists. Skipping download of new one."
+    echo "Le fichier server.cfg existe déjà. Téléchargement ignoré."
   else
-    echo "Downloading default FiveM server config..."
+    echo "Téléchargement du fichier de configuration FiveM par défaut..."
     curl https://raw.githubusercontent.com/darksaid98/pterodactyl-fivem-egg/master/server.cfg >> server.cfg
   fi
 
-  # Clone resources repo from git or install FiveM default resources
+  # Clonage des ressources via Git ou installation des ressources par défaut
   if [ "${GIT_ENABLED}" == "1" ] && [ ! -d "/mnt/server/resources" ]; then
-    # Download from git
-    
-    echo "Preparing to clone resources repo from git.";
+    echo "Préparation du clonage des ressources depuis Git."
 
-    if [[ ${GIT_REPOURL} != *.git ]]; then # Add .git at end of URL
+    if [[ ${GIT_REPOURL} != *.git ]]; then
       GIT_REPOURL=${GIT_REPOURL}.git
     fi
 
-    if [ -z "${GIT_USERNAME}" ] && [ -z "${GIT_TOKEN}" ]; then # Check for git username & token
-      echo -e "Git Username or Git Token was not specified."
+    if [ -z "${GIT_USERNAME}" ] && [ -z "${GIT_TOKEN}" ]; then
+      echo "Nom d’utilisateur Git ou token Git non spécifié."
     else
       GIT_REPOURL="https://${GIT_USERNAME}:${GIT_TOKEN}@$(echo -e ${GIT_REPOURL} | cut -d/ -f3-)"
     fi
 
     if [ -z ${GIT_BRANCH} ]; then
-      echo -e "Cloning default branch into /resources/*."
+      echo "Clonage de la branche par défaut dans /resources/*."
       git clone ${GIT_REPOURL} /mnt/server/resources
     else
-      echo -e "Cloning ${GIT_BRANCH} branch into /resources/*."
-      git clone --single-branch --branch ${GIT_BRANCH} ${GIT_REPOURL} /mnt/server/resources && echo "Finished cloning into /resources/* from Git." || echo "Failed cloning into /resources/* from Git."
+      echo "Clonage de la branche ${GIT_BRANCH} dans /resources/*."
+      git clone --single-branch --branch ${GIT_BRANCH} ${GIT_REPOURL} /mnt/server/resources \
+        && echo "Clonage terminé avec succès." \
+        || echo "Échec du clonage depuis Git."
     fi
 
   else
-    # Download FiveM default server resources
-
+    # Installation des ressources FiveM par défaut
     mkdir -p /mnt/server/resources
-    echo "Preparing to clone default FiveM resources."
-    git clone https://github.com/citizenfx/cfx-server-data.git /tmp && echo "Downloaded server from git." || echo "Downloading from git failed."
+    echo "Clonage des ressources FiveM par défaut."
+    git clone https://github.com/citizenfx/cfx-server-data.git /tmp \
+      && echo "Ressources téléchargées depuis Git." \
+      || echo "Échec du téléchargement depuis Git."
     cp -Rf /tmp/resources/* resources/
-
   fi
 
   mkdir logs/
-  echo "Installation complete."
+  echo "Installation terminée."
 
 else
-  # Update script
-  echo "Beginning update of existing FiveM server artifact."
+  # Script de mise à jour
+  echo "Début de la mise à jour de l’artifact FiveM existant."
 
-  # Delete old artifact
+  # Suppression de l’ancien artifact
   if [ -d "./alpine/" ]; then
-    echo "Deleting old artifact..."
+    echo "Suppression de l’ancien artifact..."
     rm -r ./alpine/
     while [ -d "./alpine/" ]; do
       sleep 1s
     done
-    echo "Deleted old artifact files successfully."
+    echo "Ancien artifact supprimé avec succès."
   fi
 
-  # Grab download link from FIVEM_VERSION
+  # Récupération du lien de téléchargement
   if [ "${FIVEM_VERSION}" == "latest" ] || [ -z ${FIVEM_VERSION} ] ; then
-    # Grab latest optional artifact if version requested is latest or null
     LATEST_ARTIFACT=$(echo -e "${RELEASE_PAGE}" | grep "LATEST OPTIONAL" -B1 | grep -Eo 'href=".*/*.tar.xz"' | grep -Eo '".*"' | sed 's/\"//g' | sed 's/\.\///1')
     DOWNLOAD_LINK=$(echo https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/${LATEST_ARTIFACT})
   else
-    # Grab specific artifact if it exists
     VERSION_LINK=$(echo -e "${RELEASE_PAGE}" | grep -Eo 'href=".*/*.tar.xz"' | grep -Eo '".*"' | sed 's/\"//g' | sed 's/\.\///1' | grep ${FIVEM_VERSION})
     if [ "${VERSION_LINK}" == "" ]; then
-      echo -e "Defaulting to directly downloading artifact as the version requested was not found on page."
+      echo "Version demandée introuvable, téléchargement par défaut."
     else
       DOWNLOAD_LINK=$(echo https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/${FIVEM_VERSION}/fx.tar.xz)
     fi
   fi
 
-  # Download artifact and get filetype
-  echo -e "Running curl -sSL ${DOWNLOAD_LINK} -o ${DOWNLOAD_LINK##*/}..."
+  echo "Téléchargement de l’artifact FiveM..."
   curl -sSL ${DOWNLOAD_LINK} -o ${DOWNLOAD_LINK##*/}
-  echo "Extracting FiveM artifact files..."
+  echo "Extraction des fichiers..."
   FILETYPE=$(file -F ',' ${DOWNLOAD_LINK##*/} | cut -d',' -f2 | cut -d' ' -f2)
 
-  # Unpack artifact depending on filetype
   if [ "$FILETYPE" == "gzip" ]; then
     tar xzvf ${DOWNLOAD_LINK##*/}
   elif [ "$FILETYPE" == "Zip" ]; then
@@ -138,13 +134,10 @@ else
   elif [ "$FILETYPE" == "XZ" ]; then
     tar xvf ${DOWNLOAD_LINK##*/}
   else
-    echo -e "Downloaded artifact of unknown filetype. Exiting."
+    echo "Type de fichier inconnu. Arrêt."
     exit 2
   fi
 
-  # Delete original bash launch script
   rm -rf ${DOWNLOAD_LINK##*/} run.sh
-
-  echo "Update complete."
-
+  echo "Mise à jour terminée."
 fi
