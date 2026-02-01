@@ -1,5 +1,4 @@
 # Pterodactyl-Nodejs-egg
-HaZeyHosting
 
 L’egg NodeJS pour Pterodactyl permet d’exécuter des applications Node.js au sein du panel de gestion de serveurs Pterodactyl.
 L’une de ses fonctionnalités principales est la possibilité de définir une **commande de démarrage personnalisée**, offrant ainsi davantage de flexibilité et de contrôle sur la manière dont vos applications Node.js sont lancées.
